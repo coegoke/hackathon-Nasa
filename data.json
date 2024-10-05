@@ -1,0 +1,26 @@
+[
+    {
+        "url": "https://www.google.com/finance/quote/BNP:EPA?hl=en",
+        "data": {
+            "name": "BNP Paribas SA",
+            "change": "1.28%",
+            "price": "€60.86"
+        }
+    },
+    {
+        "url": "https://www.google.com/finance/quote/.DJI:INDEXDJX?hl=en",
+        "data": {
+            "name": "Dow Jones Industrial Average",
+            "change": "0.81%",
+            "price": "42,352.75"
+        }
+    },
+    {
+        "url": "https://www.google.com/finance/quote/.INX:INDEXSP?hl=en",
+        "data": {
+            "name": "S&P 500",
+            "change": "0.90%",
+            "price": "5,751.07"
+        }
+    }
+]
