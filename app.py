@@ -5,6 +5,7 @@ import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import load_model
 from flask_cors import CORS
+import os
 app = Flask(__name__)
 import pickle
 cors = CORS(app)
@@ -61,9 +62,12 @@ def predict():
 
     # Convert the result to a list before sending it as JSON
     result = scaler.inverse_transform(np.array(future_forecast).reshape(-1, 1)).flatten().tolist()
-    data_beras['index'] = pd.to_datetime(data_beras['index'], format="%d-%m-%Y")
+    
     future_dates = pd.date_range(start=data_beras['index'].iloc[-1], periods=days+1)[1:]
+    # future_dates = future_dates.strftime('%Y-%m-%d')
     future_dates_str = future_dates[-30:].astype(str).tolist()
+    data_beras['index'] = pd.to_datetime(data_beras['index'], format="%d-%m-%Y")
+    data_beras['index'] = data_beras['index'].dt.strftime('%Y-%m-%d')
     df_beras = data_beras[['index','Beras']].tail(1000)
 
     return jsonify({'historical_data':{'date':df_beras['index'].tolist(), 'value':df_beras['Beras'].tolist()},
@@ -91,7 +95,7 @@ def predict_seasonal():
     return jsonify({"estimated_revenue":round(price,3),'color':color})
 
 @app.route('/predict_estimated_revenue', methods=['POST'])
-def predict_seasonal():
+def predict_estimated_revenue():
     # Get data from the request
     target_date_str = request.json['seasonal']
     total_available = request.json['total_available']
@@ -162,4 +166,6 @@ def get_weather():
     return jsonify({"El Nino":round(catboost_proba[0][0],0), "La Nina":round(catboost_proba[0][1],0)})
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True,
+            host="0.0.0.0",
+            port=int(os.environ.get("PORT", 8080)))
